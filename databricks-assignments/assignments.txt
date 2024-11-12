@@ -1,0 +1,261 @@
+#15 
+for below dataset need aggregate query in databricks
+
+type 
+car,
+car,
+twowheeler,
+twowheeler,
+
+output
+type,count,percentage
+car,2,50%
+twowheeler,2,50%
+
+-------------------
+
+#14
+dataset
+id type color
+1  vehicle, car black
+2  bike, honda grey
+2  bike,tvs  	grey
+3  bike,tvs  	grey
+
+
+output
+id complextype_type color
+1  {vehicle: vehicle, car : car} black
+2  {bike:bike, honda, honda} grey
+2  {bike:bike, tvs:tvs}  	grey
+3  {bike:bike, tvs:tvs} 	grey
+
+
+select 
+id, 
+map_from_entries( transform(split(type, ','), x -> struct(x, x))) complextype_type,
+color
+(select id, type, color from datasetgroup by all)
+
+instead of multiple select need only one select statement for above desired output
+
+-------------------------
+
+#13 
+%python
+df=spark.read.format("csv").load("s3://west-1-001/test/onboarding/input/uncompressed/")
+df.show(200)
+
+--------------
+
+
+#12 : population checks
+ -- analysis for Orders
+ select count(*) tot
+, sum(case when SOLD_DATE is not NULL then 1 else 0 end) nb_sold_date
+, round(nb_sold_date/tot*100, 2) PERC_sold_date 
+, sum(case when SALES_DEALER_CODE is not NULL then 1 else 0 end) nb_sales_dealer_code
+, round(nb_sales_dealer_code/tot*100, 2) PERC_nb_sales_dealer_code 
+from  temp_table
+
+----------------
+#11 :
+databricks sql query 
+dataset 
+id, code, value
+1, t1, t1v
+1, t2, t2v
+2, t1, t1v
+2, t2, t2v
+
+output dataset
+id, map
+1, {t1:t1v, t2:t2v}
+2, {t1:t1v, t2:t2v}
+
+-----------------
+
+#10 : 
+databricks sql query 
+dataset1 
+id, code , foodtype
+1, t1, t1v,  pizza
+1, t2, t2v, burger
+2, t1,t1v, pizza
+2, t3,t3v, sandwitch
+
+dataset2
+id, map 
+1, {t1:t1v, t2:t2v}
+2, {t1:t1v, t2:t3v}
+
+how to join dataset1 and dataset2 as databricks sql to get foodtype in map
+id, map2 
+1, {{t1:t1v, foodtype:pizza}, {t2:t2v, foodtype:burger}
+2, {{t1:t1v, foodtype:pizza}, {t3:t3v, foodtype:sandwitch}
+------------------
+
+#09 : code	type	value
+1803	19H	98
+1803	39H	96
+1803	44X	2D
+1803	49H	1C
+
+code, 19H, 39H,44X,49H
+1803,98,96,2D,1C
+------------------------
+
+#08 :databricks sql query to get below output
+dataset1
+id, type
+1, car
+1, auto
+2, twowheeler
+2, tvs
+
+datasetoutput
+id, list
+1, car, auto
+2, twowheeler, tvs
+
+-----------------
+
+#07 : How to query below array having dtType = 'Soft'
+array
+0: {"occuranceDT": "1970-01-01T00:00:00.000Z", "dtType": "Soft", "pCode": "B182-92", "faultStatus": "Stored", "ecu": "LGM", "MILLamp": "false"}
+1: {"occuranceDT": "1970-01-01T00:00:00.000Z", "dtType": "Hard", "pCode": "C063-9A", "faultStatus": "Stored", "ecu": "ASM", "MILLamp": "false"}
+array
+0: {"occuranceDT": "2023-11-01T17:27:59.000Z", "dtType": "Medium", "pCode": "C4A5-68", "faultStatus": "Stored", "ecu": "HALF", "MILLamp": "false"}
+
+
+--------------
+
+#06 : for below Input , how to write sql to get rows with BM = true, and in output select 
+inputcolumn
+{"BM": true,"BM 2.0": true}
+{"SRF": true}
+null
+{"BM": true,"BM 2.0H": true}
+{"BM": true}
+{"BM 2.0H": true}
+
+output should be
+column header : BM, BM 2.0, SRF, BM 2.0H
+Data
+BM, BM 2.0, null, null
+null,null,SRF,null
+BM,null, null, null
+null,null,null,BM 2.0H
+
+--------------
+
+#05 : databricks sql for getting following output based on given input
+input column
+BM,BM 2.0
+SRF
+null
+BM,BM 2.0H
+BM
+BM 2.0H
+
+output column
+{"BM": true,"BM 2.0": true}
+{"SRF": true}
+null
+{"BM": true,"BM 2.0H": true}
+{"BM": true}
+{"BM 2.0H": true}
+
+--------------
+
+#04 : in databricks sql, need following output for input data given. note only few known types are given , it can be anything in daily data feeds, need generic query for below output
+ID, type
+1, tech
+2, business
+3, business
+1, business
+2, tech
+4, sales
+5, executive
+6, driver
+
+output dataset , json of type column group by ID
+
+ID, type
+1, {tech:true, business: true}
+2, {tech:true, business: true}
+3, {business: true}
+
+--------------------
+
+#03 :merge two different structs as one in databricks query
+
+table1
+col1
+struct<OS:string,OS_version:string,appName:string,appVersion:string,brand:string>
+
+
+table2
+col1
+struct<T1:string,T2:string,T3:string,T4:string,T5:string>
+
+
+Final table1
+struct<OS:string,OS_version:string,appName:string,appVersion:string,brand:string,struct<T1:string,T2:string,T3:string,T4:string,T5:string>>
+--------------------
+
+#02 :Need databricks query for counts of types in dataset 1 and 2 together
+dataset 1:
+id, type
+1, box
+2, tool
+3, tool
+4, null
+5, box
+
+dataset 2 :
+id, type
+1, box
+2, tool
+3, circle
+
+expected result : 
+type, dataset1count, dataset2count
+box,2,1
+tool, 2, 1
+null, 1,2
+circle, 0, 1
+
+#01 :databricks query to convert piped data into multiple rows in below dataset
+devicename, cnt
+A|B|C, 2
+A, 4
+B, 2 
+
+--------------------
+
+desired Output of the query should be below
+devicename, cnt
+A,6
+B,4
+C,2
+ 
+--------------------
+#00 :
+Input:
+
+CustId Product 
+HammerBoltBrush
+1234 Hammer $5.99 Null Null 
+7639 Bolt + Brush Null $3.99 $6.99
+6322 Brush Null NULL $6.99
+
+Required Output:
+
+CustId Product Price 
+1234 Hammer $5.99 
+7639 Bolts $3.99 
+7639 Brush $6.99
+6322 Brush $6.99 
+
+Can anyone kindly help me solve the same. This has to be solved by Spark-SQL only.

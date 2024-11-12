@@ -1,4 +1,4 @@
-
+-- link : learnsql.com/blog/moving-average-in-sql/
 -- Design tests for 
 -- Percent of Type population on current version of the table
 
