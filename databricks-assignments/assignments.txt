@@ -1,3 +1,93 @@
+#18
+
+
+Design tests for 
+Percent of Type population on current version of the table
+
+Percent of Type population on previous version of the table for last three to five days
+
+Flag the type of devices where there is a change of percent population lets say 5% or 2%
+
+databricks sql query to see Percent of Type population on previous days   last three 7 days
+test data
+date, type, cnt
+2024-08-01, c1, 10000
+2024-08-01, c2, 10000
+2024-08-01, c3, 10000
+
+2024-08-02, c1, 10099
+2024-08-02, c2, 10900
+2024-08-02, c3, 19000
+
+2024-08-03, c1, 19000
+2024-08-03, c2, 10700
+2024-08-03, c3, 10030
+
+2024-08-04, c1, 7000
+2024-08-04, c2, 10600
+2024-08-04, c3, 10010
+
+2024-08-05, c1, 11000
+2024-08-05, c2, 10030
+2024-08-05, c3, 17000
+
+2024-08-07, c1, 18000
+2024-08-07, c2, 10080
+2024-08-07, c3, 15000
+
+2024-08-08, c1, 10300
+2024-08-08, c2, 10000
+2024-08-08, c3, 15000 
+ 
+Percent of Type population on target data across all types
+test data
+date, type, cnt
+2024-08-01, c1, 10000
+2024-08-01, c2, 10000
+2024-08-01, c3, 10000
+
+Flag the type of devices where there is a change of percent population lets say 5%
+2024-08-02, c1, 10099
+2024-08-02, c2, 10900
+2024-08-02, c3, 19000
+-----------
+
+#17
+databricks
+python 
+- assignments to test anonymization techniques
+- test AI models for test data generations
+- testing the backend apis 
+ 
+
+
+
+----------
+#16
+
+Dataricks query to convert delimiter separated string into array of strings
+
+dataset_input
+id, type
+1, PETROL
+2,BENZINE/GPL
+3, BENZINE/METHANE
+4, ELECTRIC
+
+
+dataset_output 
+id, type_map
+1, {PETROL}
+2,{BENZINE, GPL}
+3, { BENZINE, METHANE}
+4, {ELECTRIC}
+
+so that it can be queried like this 
+select id where type_map = BENZINE
+
+------------
+
+
 #15 
 for below dataset need aggregate query in databricks
 
